@@ -1,11 +1,11 @@
 <?php
-require('../../vendor/autoload.php');
+require(__DIR__.'/vendor/autoload.php');
 require('mqtt-server-config.php');
 
 use \PhpMqtt\Client\MqttClient;
 // use \PhpMqtt\Client\ConnectionSettings;
 
-include('../sqlite/sqlitesvc.php');
+include(__DIR__.'common/sqlite/sqlitesvc.php');
 
 $arrtopics = array('heaterlt2','test');
 
@@ -21,7 +21,7 @@ $mqtt->connect();
 
 foreach ($arrtopics as $substopic) {
     $mqtt->subscribe($substopic, function ($topic, $message) {
-        $dbsvc = new Sqlitesvc('../sqlite/subs-db.sqlite');
+        $dbsvc = new Sqlitesvc(__DIR__.'/sqlite/subs-db.sqlite');
         date_default_timezone_set("Asia/Jakarta");
         $nowdate = Date("d-m-Y H:i:s.v");
         $arrdata = array("topic_subs" => $topic,
