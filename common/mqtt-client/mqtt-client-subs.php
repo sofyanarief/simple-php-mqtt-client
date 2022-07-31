@@ -3,20 +3,21 @@ require('../../vendor/autoload.php');
 require('mqtt-server-config.php');
 
 use \PhpMqtt\Client\MqttClient;
-use \PhpMqtt\Client\ConnectionSettings;
+// use \PhpMqtt\Client\ConnectionSettings;
 
 include('../sqlite/sqlitesvc.php');
 
 $arrtopics = array('heaterlt2','test');
 
-$connectionSettings  = new ConnectionSettings();
-$connectionSettings
-    ->setUsername($username)
-    ->setPassword($password)
-    ->setLastWillQualityOfService(0);
+// $connectionSettings  = new ConnectionSettings();
+// $connectionSettings
+//     ->setUsername($username)
+//     ->setPassword($password)
+//     ->setLastWillQualityOfService(0);
 
 $mqtt = new MqttClient($server, $port, $clientId);
-$mqtt->connect($connectionSettings, $clean_session);
+$mqtt->connect();
+// $mqtt->connect($connectionSettings, $clean_session);
 
 foreach ($arrtopics as $substopic) {
     $mqtt->subscribe($substopic, function ($topic, $message) {
