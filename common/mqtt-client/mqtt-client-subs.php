@@ -7,8 +7,6 @@ use \PhpMqtt\Client\ConnectionSettings;
 
 include('../sqlite/sqlitesvc.php');
 
-$arrtopics = array('heaterlt2','test');
-
 $connectionSettings  = new ConnectionSettings();
 $connectionSettings
     ->setUsername($username)
@@ -20,15 +18,15 @@ $mqtt->connect($connectionSettings, $clean_session);
 
 foreach ($arrtopics as $substopic) {
     $mqtt->subscribe($substopic, function ($topic, $message) {
-        $dbsvc = new Sqlitesvc('../sqlite/subs-db.sqlite');
-        date_default_timezone_set("Asia/Jakarta");
+        $dbsvc = new Sqlitesvc($GLOBALS['sqlitefile']);
+        date_default_timezone_set($GLOBALS['timezone']);
         $nowdate = Date("d-m-Y H:i:s.v");
         $arrdata = array("topic_subs" => $topic,
                         "value_subs" => $message,
                         "timestamp_subs" => $nowdate);
         $ret = $dbsvc->dbinsert("tbl_subs",$arrdata);
         if($ret == true){
-            echo sprintf("Received message on topic [%s]: %s\n", $topic, $message);
+            echo sprintf("%s - Received message on topic [%s]: %s\n", $nowdate, $topic, $message);
         }else{
             echo sprintf($ret);
         }
